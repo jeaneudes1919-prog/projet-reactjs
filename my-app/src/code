@@ -1,0 +1,22 @@
+/*import React from "react";
+import TableauDeBord from "./composants/TableauDeBord"; // adapte le chemin si besoin
+
+export default function App() {
+  return (
+    <div>
+      <TableauDeBord />
+    </div>
+  );
+}
+
+import React from "react";
+import DashboardCandidat from "./composant2/DashboardCandidat";
+
+export default function App() {
+  return (
+    <div>
+      <DashboardCandidat />
+    </div>
+  );
+}
+*/
