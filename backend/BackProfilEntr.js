@@ -4,6 +4,8 @@ const pool = require("./db");
 const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
+const LOGO_PAR_DEFAUT = "/uploads/entreprise_logo.jpg";
+
 
 const logosDir = path.join(__dirname, "uploads", "logos");
 if (!fs.existsSync(logosDir)) fs.mkdirSync(logosDir, { recursive: true });
@@ -72,13 +74,14 @@ router.post("/api/entreprise/upload-logoUrl", upload.single("logoUrl"), async (r
 
   try {
     const [rows] = await pool.query("SELECT logoUrl FROM entreprises WHERE id = ?", [userId]);
-    if (rows.length > 0 && rows[0].logoUrl) {
-      const ancienLogoPath = path.resolve(__dirname, '.' + rows[0].logoUrl);
-      fs.unlink(ancienLogoPath, (err) => {
-        if (err) console.warn("Erreur suppression ancien logo :", err);
-        else console.log("Ancien logo supprimé :", ancienLogoPath);
-      });
-    }
+    if (rows.length > 0 && rows[0].logoUrl && rows[0].logoUrl !== LOGO_PAR_DEFAUT) {
+  const ancienLogoPath = path.resolve(__dirname, '.' + rows[0].logoUrl);
+  fs.unlink(ancienLogoPath, (err) => {
+    if (err) console.warn("Erreur suppression ancien logo :", err);
+    else console.log("Ancien logo supprimé :", ancienLogoPath);
+  });
+}
+
 
     const logoUrl = `/uploads/logos/${req.file.filename}`;
     await pool.query("UPDATE entreprises SET logoUrl = ? WHERE id = ?", [logoUrl, userId]);

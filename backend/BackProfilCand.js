@@ -3,6 +3,8 @@ const pool = require("./db");
 const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
+const PHOTO_PAR_DEFAUT = "/uploads/logo_candidat.png";
+
 
 const router = express.Router();
 
@@ -88,7 +90,10 @@ router.post("/api/candidats/upload-photo", upload.single("photo"), async (req, r
 
   try {
     const [rows] = await pool.query("SELECT photoUrl FROM candidats WHERE id = ?", [id]);
-    if (rows.length > 0 && rows[0].photoUrl) supprimerFichier(rows[0].photoUrl);
+    if (rows.length > 0 && rows[0].photoUrl && rows[0].photoUrl !== PHOTO_PAR_DEFAUT) {
+  supprimerFichier(rows[0].photoUrl);
+}
+
 
     const photoUrl = `/uploads/${req.file.filename}`;
     await pool.query("UPDATE candidats SET photoUrl = ? WHERE id = ?", [photoUrl, id]);
